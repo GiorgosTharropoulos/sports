@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+    command: python manage.py runserver 0.0.0.0:8000
+    container_name: server
+    depends_on:
+      - database
+    environment:
+      - PGDATABASE=sports
+      - PGUSER=sports
+      - PGPASSWORD=sports
+      - PGHOST=database
+    ports:
+      - 8003:8000
+    volumes:
+      - ./server:/usr/src/app
+
+  database:
+    container_name: database
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=sports
+      - POSTGRES_PASSWORD=sports
+    expose:
+      - 5432
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  database:
