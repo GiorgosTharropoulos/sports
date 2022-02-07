@@ -29,5 +29,14 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
 
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - 8080:80
+
 volumes:
   database:
