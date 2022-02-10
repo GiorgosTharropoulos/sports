@@ -17,7 +17,6 @@ class UserDTO(TypedDict):
     last_name: str
     email: str
     is_staff: bool
-    email: str
     is_active: bool
     date_joined: datetime.datetime
 
@@ -27,7 +26,7 @@ class UserIn(UserDTO):
     password2: str
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserInSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
@@ -36,9 +35,20 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Passwords must match.")
         return data
 
+    @property
+    def data(self) -> UserDTO:
+        return super().data
+
     class Meta:
         model = get_user_model()
         fields = ("id", "username", "password1", "password2", "first_name", "last_name")
+        read_only_fields = ("id",)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        exclude = ("password",)
         read_only_fields = ("id",)
 
 
@@ -46,7 +56,7 @@ class TokenSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token: TokenPair = super().get_token(user)
-        user_data: UserDTO = UserSerializer(user).data
+        user_data: UserDTO = UserInSerializer(user).data
         for key, value in user_data.items():
             if key != "id":
                 token[key] = value

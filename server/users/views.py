@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import TokenSerializer, UserSerializer
+from .serializers import TokenSerializer, UserInSerializer
 from .services import user_service
 
 
@@ -13,7 +13,7 @@ class LogInView(TokenObtainPairView):
 
 
 class SignUpView(APIView):
-    serializer_class = UserSerializer
+    serializer_class = UserInSerializer
 
     def post(self, request: Request) -> Response:
         user = user_service.create(request.data)
