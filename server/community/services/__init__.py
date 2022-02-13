@@ -1,5 +1,1 @@
-from .sports import sports_service
-
-__all__ = [
-    "sports_service",
-]
+from .user_service import user_service  # noqa
